@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as actionCreators from '../store/creators/actionCreators'
 
-function Login() {
+function Login(props) {
 
     const navigate = useNavigate()
 
@@ -14,8 +16,9 @@ function Login() {
         })
     }
 
-    const handleUserLogin = () => {
+    const handleUserLogin = (props) => {
         localStorage.setItem('username', user.username)
+        props.onLogin()
         navigate("/")
     }
 
@@ -24,9 +27,15 @@ function Login() {
             <h1>Login</h1>
             <input type="text" placeholder="username" name="username" onChange={handleTextChange}/>
             <input type="password" placeholder="password" name="password" onChange={handleTextChange}/>
-            <button onClick={handleUserLogin}>Login</button>
+            <button onClick={() => handleUserLogin(props)}>Login</button>
         </div>
     )
 }
 
-export default Login
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLogin: () => dispatch(actionCreators.login())
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Login)

@@ -11,23 +11,44 @@ import Register from './components/Register';
 import Login from './components/Login';
 import AddBook from './components/AddBook';
 import MyBooks from './components/MyBooks';
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
+import CartList from './components/CartList';
+import authenticateReducer from './store/reducers/authenticate'
+import cartReducer from './store/reducers/cart'
+import bookReducer from './store/reducers/books'
+import favoritesReducer from './store/reducers/favorites'
+import FavoritesList from './components/FavoritesList';
+
+const rootReducer = combineReducers({
+  authenticateRed: authenticateReducer,
+  cartRed: cartReducer,
+  bookRed: bookReducer,
+  favoritesRed: favoritesReducer
+  
+})
+
+const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 ReactDOM.render(
   <React.StrictMode>
-    
-    <BrowserRouter>
-        <BaseLayout>
-          <Routes>
-              <Route path="/" element={<App />} />
-              <Route path="/edit-book/:id" element={<EditBook />} />
-              <Route path="/book/:id" element={<BookDetail />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/Login" element={<Login />} />
-              <Route path="/add-book" element={<AddBook />} />
-              <Route path="/my-books" element={<MyBooks />} />
-          </Routes>
-        </BaseLayout>
-    </BrowserRouter>
+    <Provider store = {store}>
+      <BrowserRouter>
+          <BaseLayout>
+            <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/edit-book/:id" element={<EditBook />} />
+                <Route path="/book/:id" element={<BookDetail />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/Login" element={<Login />} />
+                <Route path="/add-book" element={<AddBook />} />
+                <Route path="/my-books" element={<MyBooks />} />
+                <Route path="/cart" element={<CartList />} />
+                <Route path="/favorites" element={<FavoritesList />} />
+            </Routes>
+          </BaseLayout>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
