@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import BookList from './components/BookList'
+import { connect } from 'react-redux'
+import * as actionCreators from './store/creators/actionCreators'
 
-function App() {
+function App(props) {
   const [books, setBooks] = useState([])
 
   useEffect(()=> {
-    fetch('http://localhost:8080/books')
-    .then(response => response.json())
-    .then(books => {
-      setBooks(books)
-    })
+    props.onFetchBooks()
   }, [])
 
   const fetchAllBooks = () => {
-    fetch('http://localhost:8080/books')
-    .then(response => response.json())
-    .then(books => {
-      setBooks(books)
-    })
+    props.onFetchBooks()
   }
 
   return(
@@ -28,8 +22,14 @@ function App() {
 
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchBooks: () => dispatch(actionCreators.fetchBooks())
+  }
+}
 
-export default App;
+
+export default connect(null, mapDispatchToProps)(App);
 
 // class App extends Component {
 

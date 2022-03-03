@@ -14,7 +14,7 @@ function BookList(props) {
         })
     }
 
-    const bookItems = props.books.map(book => {
+    const bookItems = props.allBooks.map(book => {
         return <li key = {book.id}>
             {book.title}
             <button onClick={() => deleteBook(book.id)}>Delete</button>
@@ -41,7 +41,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(BookList) 
+const mapStateToProps = (state) => {
+    return {
+        allBooks: state.bookRed.books
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookList) 
 
 // class BookList extends Component {
 
