@@ -10,6 +10,16 @@ export const fetchBooks = () => {
     }
 }
 
+export const fetchfilteredBooks = (genre) => {
+    return (dispatch) => {
+        fetch(`http://localhost:8080/books/${genre}`)
+        .then(response => response.json())
+        .then(filteredBooks => {
+            dispatch({type: actionTypes.FILTERED_BOOKS_LOADED, payload: filteredBooks})
+        })
+    }
+}
+
 export const login = () => {
     return {
         type: actionTypes.LOG_IN

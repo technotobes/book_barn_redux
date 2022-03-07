@@ -14,9 +14,13 @@ function App(props) {
     props.onFetchBooks()
   }
 
+  const handleFilterBooks = (e) => {
+    props.onFetchFilteredBooks(e.target.value)
+  }
+
   return(
     <div>
-      <BookList books={books} onBookDeleted={() => fetchAllBooks()}/>
+      <BookList books={books} onBookDeleted={() => fetchAllBooks()} onFilterBooks={() => handleFilterBooks} onFetchBooks={() => fetchAllBooks()}/>
     </div>
   )
 
@@ -24,7 +28,8 @@ function App(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchBooks: () => dispatch(actionCreators.fetchBooks())
+    onFetchBooks: () => dispatch(actionCreators.fetchBooks()),
+    onFetchFilteredBooks: (genre) => dispatch(actionCreators.fetchfilteredBooks(genre))
   }
 }
 

@@ -28,6 +28,9 @@ function BookList(props) {
     return (
         <div>
           <h1>Books</h1>
+          <button onClick={() => props.onFetchBooks()} value="Action">All</button>
+          <button onClick={props.onFilterBooks()} value="Action">Action</button>
+          <button onClick={props.onFilterBooks()} value="Biography">Biography</button>
           {bookItems}
         </div>
     )
@@ -37,13 +40,14 @@ function BookList(props) {
 const mapDispatchToProps = (dispatch) => {
     return {
         onAddToCart: (book) => dispatch(actionCreators.addToCart(book)),
-        onAddToFavorites: (book) => dispatch(actionCreators.addToFavorites(book))
+        onAddToFavorites: (book) => dispatch(actionCreators.addToFavorites(book)),
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        allBooks: state.bookRed.books
+        allBooks: state.bookRed.books,
+        filteredBooks: state.bookRed.filteredBooks
     }
 }
 

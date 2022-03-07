@@ -11,6 +11,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 books: action.payload
             }
+        case actionTypes.FILTERED_BOOKS_LOADED:
+            return {
+                ...state,
+                books: action.payload
+            }
 
         default:
             return state

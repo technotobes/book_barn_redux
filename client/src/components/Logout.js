@@ -8,7 +8,8 @@ function Logout(props) {
     const navigate = useNavigate()
 
     const handleUserLogout = (props) => {
-        localStorage.setItem('username', null)
+        localStorage.removeItem('jsonwebtoken')
+        localStorage.removeItem('username')
         props.onLogout()
         navigate("/")
     }

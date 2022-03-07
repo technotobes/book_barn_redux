@@ -5,6 +5,8 @@ const app = express()
 const models = require('./models')
 const bcrypt = require('bcrypt') 
 const session = require('express-session')
+const jwt = require('jsonwebtoken')
+const authenticate = require('./authenticateMiddleware')
 
 const SALT_ROUND = 10
 
@@ -86,30 +88,121 @@ app.post('/register', async (req, res) => {
 
 })
 
+app.post('/login2', (req, res) => {
+    const username = req.body.username
+    const password = req.body.password
 
-
-
-
-app.get("/my-books/:username", (req, res) => {
-    const username = req.params.username
-    models.Book.findAll({
+    models.User.findOne({
         where: {
-            username:username
+            username: username
         }
-    }).then((books) => {
-        console.log(books)
-        res.json(books)
+    }).then(user => {
+
+        if(user) {
+            bcrypt.compare(password, user.password, function(err, result) {
+                if(result) {
+                    // pw is matching
+                    // generate JSON Web Token
+                    // dont put sensitive data into the token
+                    const token = jwt.sign({username: user.username}, 'SECRETKEY')
+                    res.json({success:true, token:token})
+                } else {
+                    res.json({success:false, message:'Not Authenticated!'})
+                }
+            })
+
+        } else {
+            res.json({success:false, message:'Authentication Failed!'})
+        }
+
+    })
+})
+
+app.post('/register2', (req, res) => {
+    const username = req.body.username
+    const password = req.body.password
+
+    models.User.findOne({
+        where: {
+            username: username
+        }
+    }).then(user => {
+        if(user) {
+           res.json({success: false, message: "Username already exists!"}) 
+        }
+    }).catch(error => {
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                models.User.build({
+                    username: username,
+                    password: hash
+                })
+
+                user.save().then(savedUser => {
+                    res.json({success: true, message:"User has been saved!"})
+                })
+            })
+        })       
     })
 })
 
 
+app.get("/profile/:username", authenticate, (req, res) => {
+    const username = req.params.username
+    models.User.findOne({
+        where: {
+            username: username
+        }
+    }).then((user) => {
+        res.json(user)
+        
+    })
+})
 
+
+app.post('/profile/:username/edit-email', authenticate, (req, res)  => {
+    const username = req.params.username
+    const email = req.body.email
+    models.User.update({
+        email: email,
+    },{
+        where:{
+            username: username,
+        }
+    }).then(() => {
+        res.json({message:"Email Edited"})
+    })
+})
+
+
+app.get("/my-books/:username", authenticate, (req, res) => {
+    const username = req.params.username
+    models.Book.findAll({
+        where: [{
+            username : username
+        }]
+    }).then((books) => {
+        res.json(books)
+    })
+})
 
 
 app.get("/books", (req, res) => {
     models.Book.findAll()
     .then((books) => {
         res.json(books)
+    })
+})
+
+app.get("/books/:genre", (req, res) => {
+    const genre = req.params.genre
+    models.Book.findAll({
+        where: [{
+            genre: genre
+        }]
+    })
+    .then((filteredBooks) => {
+        res.json(filteredBooks)
     })
 })
 

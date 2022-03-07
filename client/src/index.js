@@ -20,6 +20,8 @@ import bookReducer from './store/reducers/books'
 import favoritesReducer from './store/reducers/favorites'
 import FavoritesList from './components/FavoritesList';
 import thunk from 'redux-thunk';
+import Profile from './components/Profile';
+import EditEmail from './components/EditEmail';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -47,9 +49,11 @@ ReactDOM.render(
                 <Route path="/register" element={<Register />} />
                 <Route path="/Login" element={<Login />} />
                 <Route path="/add-book" element={<AddBook />} />
-                <Route path="/my-books" element={<MyBooks />} />
+                <Route path="/my-books/:username" element={<MyBooks />} />
                 <Route path="/cart" element={<CartList />} />
                 <Route path="/favorites" element={<FavoritesList />} />
+                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="/profile/:username/edit-email" element={<EditEmail />} />
             </Routes>
           </BaseLayout>
       </BrowserRouter>
